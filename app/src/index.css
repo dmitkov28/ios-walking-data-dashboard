@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.tremor-BarList-bars {
+    @apply w-[80%] text-white font-semibold
+}
+
+.tremor-BarList-labels {
+    @apply space-y-1.5
+    
+}
+
+.tremor-background-default {
+    background-color: #fff;
+}

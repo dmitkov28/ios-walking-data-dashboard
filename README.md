@@ -43,7 +43,7 @@ npx convex import --table data <path-to-data.json>
 ```
 
 To get live updates, you'll need an iOS shortcut that exports the data and sends it over to Convex.
-Here's a link to the one I'm using: []() - very far from optimal, but it gets the job done and I didn't want to spent too much time on that part.
+Here's a link to the one I'm using: [https://www.icloud.com/shortcuts/b7be795b23f5455f8c955e976e052091](https://www.icloud.com/shortcuts/b7be795b23f5455f8c955e976e052091) - very far from optimal, but it gets the job done and I didn't want to spent too much time on that part.
 
 > [!NOTE]  
 > As of May 2024, iOS shortcut automations can only be set up to run daily, meaning that if you need something to run every X minutes, you need to create multiple automations.

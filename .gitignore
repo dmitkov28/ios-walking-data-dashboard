@@ -18,5 +18,5 @@ TODOs.md
 .env.local
 node_modules
 *.env
-*.json
+data.json
 *.xml

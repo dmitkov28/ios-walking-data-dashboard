@@ -41,10 +41,12 @@ export const addDailyData = mutation({
         currentYear.data[currentYear.data.length - 1].distance =
           args.data.distance;
       } else {
-        currentYear.data.push({
-          date: args.data.date,
-          distance: args.data.distance,
-        });
+        if (args.data.date) {
+          currentYear.data.push({
+            date: args.data.date,
+            distance: args.data.distance,
+          });
+        }
       }
       await ctx.db.patch(currentYear._id, { data: currentYear.data });
     }

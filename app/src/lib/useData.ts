@@ -38,7 +38,9 @@ export default function useData() {
           if (isSameMonth(new Date(lastPushedItemDate), new Date(itemDate))) {
             lastPushedItem.distance += item.distance;
           } else {
-            result.push(item);
+            if (!isNaN(item.distance) && item.timestamp) {
+              result.push(item);
+            }
           }
         }
       });
@@ -90,7 +92,6 @@ export default function useData() {
         } else {
           const lastPushedItemDate = new Date(lastPushedItem.timestamp);
           const itemDate = new Date(item.timestamp);
-
           if (isSameMonth(new Date(lastPushedItemDate), new Date(itemDate))) {
             lastPushedItem.distance += item.distance;
           } else {
@@ -149,14 +150,13 @@ export default function useData() {
   const monthOverMonth = useMemo(() => {
     const currentMonth = averages[averages.length - 1];
     const prevMonth = averages[averages.length - 2];
-
-    if (!currentMonth || !prevMonth) {
+    if (!currentMonth || !prevMonth || isNaN(prevMonth.distance)) {
       return 0;
     }
 
     return (
       ((currentMonth.distance - prevMonth.distance) / prevMonth.distance) * 100
-    );
+    );   
   }, [averages]);
 
   const today = useMemo(() => {

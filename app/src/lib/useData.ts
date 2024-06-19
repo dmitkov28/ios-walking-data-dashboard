@@ -23,6 +23,8 @@ export default function useData() {
     );
   }, [data]);
 
+  console.log(sortedData);
+
   const averages = useMemo(() => {
     const result: DataPoint[] = [];
     sortedData
@@ -156,7 +158,7 @@ export default function useData() {
 
     return (
       ((currentMonth.distance - prevMonth.distance) / prevMonth.distance) * 100
-    );   
+    );
   }, [averages]);
 
   const today = useMemo(() => {
@@ -210,6 +212,9 @@ const calculateStreak = (data: DataPoint[], threshold: number) => {
       }
     }
   });
+  if (currentStreak.length) {
+    streaks.push(currentStreak);
+  }
   const longestStreak = streaks.sort((a, b) => a.length - b.length).pop();
   return longestStreak as DataPoint[];
 };

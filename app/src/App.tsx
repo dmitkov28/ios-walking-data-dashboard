@@ -1,10 +1,11 @@
 import { format } from "date-fns";
-import AppBarChart from "./components/app/Bar";
-import HorizontalBarChart from "./components/app/HorizontalBar";
-import Trend from "./components/app/Trend";
-import ValueCard from "./components/app/ValueCard";
-import useData from "./lib/useData";
+import { lazy, Suspense } from "react";
 import { distanceToMoon, earthCircumference } from "./lib/helpers";
+import useData from "./lib/useData";
+const AppBarChart = lazy(() => import("./components/app/Bar"));
+const Trend = lazy(() => import("./components/app/Trend"));
+const HorizontalBarChart = lazy(() => import("./components/app/HorizontalBar"));
+const ValueCard = lazy(() => import("./components/app/ValueCard"));
 
 function App() {
   const {
@@ -36,84 +37,137 @@ function App() {
       ) : (
         <>
           <div className="flex gap-3 flex-col md:flex-row items-stretch">
-            <ValueCard
-              title="Total distance"
-              value={`${new Intl.NumberFormat("en-US").format(total)} km`}
-              description={`🌎 ${(total / earthCircumference).toFixed(2)}x the circumference of Earth`}
-              secondDescription={`🌕 ${((total / distanceToMoon) * 100).toFixed(0)}% of the way to the Moon`}
-            />
-            <ValueCard
-              title="Daily Average Distance"
-              value={`${monthlyAverage.toFixed(2)} km`}
-            />
-            <ValueCard
-              className={
-                monthOverMonth >= 0 ? "text-emerald-400" : "text-red-500"
-              }
-              title="Month over Month Change"
-              icon={monthOverMonth >= 0 ? "⬆️" : "⬇️"}
-              value={`${monthOverMonth.toFixed(2)}%`}
-            />
-
-            <ValueCard
-              title={`📅 Today (${format(new Date(today.timestamp), "dd MMM yy")})`}
-              value={`${today.distance.toFixed(2)} km`}
-            />
+            <Suspense fallback={<p>...</p>}>
+              <ValueCard
+                title="Total distance"
+                value={`${new Intl.NumberFormat("en-US").format(total)} km`}
+                description={`🌎 ${(total / earthCircumference).toFixed(
+                  2
+                )}x the circumference of Earth`}
+                secondDescription={`🌕 ${(
+                  (total / distanceToMoon) *
+                  100
+                ).toFixed(0)}% of the way to the Moon`}
+              />
+            </Suspense>
+            <Suspense fallback={<p>...</p>}>
+              <ValueCard
+                title="Daily Average Distance"
+                value={`${monthlyAverage.toFixed(2)} km`}
+              />
+            </Suspense>
+            <Suspense fallback={<p>...</p>}>
+              <ValueCard
+                className={
+                  monthOverMonth >= 0 ? "text-emerald-400" : "text-red-500"
+                }
+                title="Month over Month Change"
+                icon={monthOverMonth >= 0 ? "⬆️" : "⬇️"}
+                value={`${monthOverMonth.toFixed(2)}%`}
+              />
+            </Suspense>
+            <Suspense fallback={<p>...</p>}>
+              <ValueCard
+                title={`📅 Today (${format(
+                  new Date(today.timestamp),
+                  "dd MMM yy"
+                )})`}
+                value={`${today.distance.toFixed(2)} km`}
+              />
+            </Suspense>
           </div>
           <div className="my-12">
-            <Trend title="📈 Daily distance" data={sortedData} />
+            <Suspense fallback={<p>...</p>}>
+              <Trend
+                title="📈 Daily distance (last 20 days)"
+                data={sortedData.slice(-20)}
+              />
+            </Suspense>
           </div>
           <div className="my-12">
-            <Trend title="📈 Monthly avg. distance" data={averages} />
+            <Suspense fallback={<p>...</p>}>
+              <Trend title="📈 Monthly avg. distance" data={averages} />
+            </Suspense>
           </div>
           <div className="grid grid-cols-3 gap-12 md:gap-2 my-12">
             <h2 className="col-span-3 text-center my-6 text-2xl font-bold">
               🚀 Streaks
             </h2>
-            <AppBarChart
-              className="col-span-3 md:col-span-1"
-              data={streak_10}
-              title={"🚀 Longest 10km+ streak"}
-              subtitle={`${format(new Date(streak_10[0].timestamp), "dd MMM yy")} - ${format(new Date(streak_10[streak_10.length - 1].timestamp), "dd MMM yy")}`}
-            />
-
-            <AppBarChart
-              className="col-span-3 md:col-span-1"
-              data={streak_20}
-              title={`🚀 Longest 20km+ streak`}
-              subtitle={`${format(new Date(streak_20[0].timestamp), "dd MMM yy")} - ${format(new Date(streak_20[streak_20.length - 1].timestamp), "dd MMM yy")}`}
-            />
-            <AppBarChart
-              className="col-span-3 md:col-span-1"
-              data={streak_30}
-              title={"🚀 Longest 30km+ streak"}
-              subtitle={`${format(new Date(streak_30[0].timestamp), "dd MMM yy")} - ${format(new Date(streak_30[streak_30.length - 1].timestamp), "dd MMM yy")}`}
-            />
+            <Suspense fallback={<p>...</p>}>
+              <AppBarChart
+                className="col-span-3 md:col-span-1"
+                data={streak_10}
+                title={"🚀 Longest 10km+ streak"}
+                subtitle={`${format(
+                  new Date(streak_10[0].timestamp),
+                  "dd MMM yy"
+                )} - ${format(
+                  new Date(streak_10[streak_10.length - 1].timestamp),
+                  "dd MMM yy"
+                )}`}
+              />
+            </Suspense>
+            <Suspense fallback={<p>...</p>}>
+              <AppBarChart
+                className="col-span-3 md:col-span-1"
+                data={streak_20}
+                title={`🚀 Longest 20km+ streak`}
+                subtitle={`${format(
+                  new Date(streak_20[0].timestamp),
+                  "dd MMM yy"
+                )} - ${format(
+                  new Date(streak_20[streak_20.length - 1].timestamp),
+                  "dd MMM yy"
+                )}`}
+              />
+            </Suspense>
+            <Suspense fallback={<p>...</p>}>
+              <AppBarChart
+                className="col-span-3 md:col-span-1"
+                data={streak_30}
+                title={"🚀 Longest 30km+ streak"}
+                subtitle={`${format(
+                  new Date(streak_30[0].timestamp),
+                  "dd MMM yy"
+                )} - ${format(
+                  new Date(streak_30[streak_30.length - 1].timestamp),
+                  "dd MMM yy"
+                )}`}
+              />
+            </Suspense>
           </div>
           <div className="grid grid-cols-4 gap-2 my-12">
             <h2 className="col-span-4 text-center my-6 text-2xl font-bold">
               🏆 Records
             </h2>
-            <HorizontalBarChart
-              className="md:col-span-1 col-span-4"
-              title="🏆 Top Days (km/day)"
-              data={topWalks}
-            />
-            <HorizontalBarChart
-              className="md:col-span-1 col-span-4"
-              title="🏆 Top Months (avg. km/month)"
-              data={topMonthlyAvg}
-            />
-            <HorizontalBarChart
-              className="md:col-span-1 col-span-4"
-              title="🏆 Top Months (km/month)"
-              data={topMonthly}
-            />
-            <HorizontalBarChart
-              className="md:col-span-1 col-span-4"
-              title="🏆 Top Years (km/year)"
-              data={topYearly}
-            />
+            <Suspense fallback={<p>...</p>}>
+              <HorizontalBarChart
+                className="md:col-span-1 col-span-4"
+                title="🏆 Top Days (km/day)"
+                data={topWalks}
+              />
+            </Suspense>
+            <Suspense fallback={<p>...</p>}>
+              <HorizontalBarChart
+                className="md:col-span-1 col-span-4"
+                title="🏆 Top Months (avg. km/month)"
+                data={topMonthlyAvg}
+              />
+            </Suspense>
+            <Suspense fallback={<p>...</p>}>
+              <HorizontalBarChart
+                className="md:col-span-1 col-span-4"
+                title="🏆 Top Months (km/month)"
+                data={topMonthly}
+              />
+            </Suspense>
+            <Suspense fallback={<p>...</p>}>
+              <HorizontalBarChart
+                className="md:col-span-1 col-span-4"
+                title="🏆 Top Years (km/year)"
+                data={topYearly}
+              />
+            </Suspense>
           </div>
         </>
       )}

@@ -112,7 +112,7 @@ function App() {
                 )} - ${format(
                   new Date(streak_10[streak_10.length - 1].timestamp),
                   "dd MMM yy"
-                )}`}
+                )} (${streak_10.length} days)`}
               />
             </Suspense>
             <Suspense fallback={<AppBarChartLoading />}>
@@ -126,7 +126,7 @@ function App() {
                 )} - ${format(
                   new Date(streak_20[streak_20.length - 1].timestamp),
                   "dd MMM yy"
-                )}`}
+                )} (${streak_20.length} days)`}
               />
             </Suspense>
             <Suspense fallback={<AppBarChartLoading />}>
@@ -140,7 +140,7 @@ function App() {
                 )} - ${format(
                   new Date(streak_30[streak_30.length - 1].timestamp),
                   "dd MMM yy"
-                )}`}
+                )} (${streak_30.length} days)`}
               />
             </Suspense>
           </div>

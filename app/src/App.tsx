@@ -3,7 +3,7 @@ import { lazy, Suspense } from "react";
 import { AppBarChartLoading } from "./components/app/Bar";
 import { TrendLoading } from "./components/app/Trend";
 import { ValueCardLoading } from "./components/app/ValueCard";
-import { distanceToMoon, earthCircumference } from "./lib/helpers";
+import { computeCaloriesBurned, distanceToMoon, earthCircumference } from "./lib/helpers";
 import useData from "./lib/useData";
 import { HorizontalBarChartLoading } from "./components/app/HorizontalBar";
 const AppBarChart = lazy(() => import("./components/app/Bar"));
@@ -77,7 +77,11 @@ function App() {
                   "dd MMM yy"
                 )})`}
                 value={`${today.distance.toFixed(2)} km`}
-              />
+              >
+                <span className="text-gray-400 italic font-medium">
+                🔥 ~ {computeCaloriesBurned(today.distance).toFixed(0)} calories
+                </span>
+              </ValueCard>
             </Suspense>
           </div>
           <div className="my-12">

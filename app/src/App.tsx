@@ -42,7 +42,7 @@ function App() {
                 title="Total distance"
                 value={`${new Intl.NumberFormat("en-US").format(total)} km`}
                 description={`🌎 ${(total / earthCircumference).toFixed(
-                  2
+                  2,
                 )}x the circumference of Earth`}
                 secondDescription={`🌕 ${(
                   (total / distanceToMoon) *
@@ -70,7 +70,7 @@ function App() {
               <ValueCard
                 title={`📅 Today (${format(
                   new Date(today.timestamp),
-                  "dd MMM yy"
+                  "dd MMM yy",
                 )})`}
                 value={`${today.distance.toFixed(2)} km`}
               />
@@ -100,10 +100,10 @@ function App() {
                 title={"🚀 Longest 10km+ streak"}
                 subtitle={`${format(
                   new Date(streak_10[0].timestamp),
-                  "dd MMM yy"
+                  "dd MMM yy",
                 )} - ${format(
                   new Date(streak_10[streak_10.length - 1].timestamp),
-                  "dd MMM yy"
+                  "dd MMM yy",
                 )}`}
               />
             </Suspense>
@@ -114,10 +114,10 @@ function App() {
                 title={`🚀 Longest 20km+ streak`}
                 subtitle={`${format(
                   new Date(streak_20[0].timestamp),
-                  "dd MMM yy"
+                  "dd MMM yy",
                 )} - ${format(
                   new Date(streak_20[streak_20.length - 1].timestamp),
-                  "dd MMM yy"
+                  "dd MMM yy",
                 )}`}
               />
             </Suspense>
@@ -128,10 +128,10 @@ function App() {
                 title={"🚀 Longest 30km+ streak"}
                 subtitle={`${format(
                   new Date(streak_30[0].timestamp),
-                  "dd MMM yy"
+                  "dd MMM yy",
                 )} - ${format(
                   new Date(streak_30[streak_30.length - 1].timestamp),
-                  "dd MMM yy"
+                  "dd MMM yy",
                 )}`}
               />
             </Suspense>

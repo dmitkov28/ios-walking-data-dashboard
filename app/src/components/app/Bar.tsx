@@ -32,7 +32,6 @@ export default function AppBarChart({
         showAnimation={true}
         showLegend={true}
         valueFormatter={(v) => `${v.toFixed(1)} km`}
-        
       />
     </div>
   );

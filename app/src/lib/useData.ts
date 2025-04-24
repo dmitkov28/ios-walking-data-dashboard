@@ -19,7 +19,7 @@ export default function useData() {
     }
     return data.sort(
       (a, b) =>
-        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     );
   }, [data]);
 
@@ -65,7 +65,7 @@ export default function useData() {
 
     return avgs.sort(
       (a, b) =>
-        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
     );
   }, [sortedData]);
 

@@ -5,7 +5,7 @@ export const formatDate = (date: string) => {
 
   const formattedDate = format(
     parse(`${day} ${month} ${year}`, "d MMMM yyyy", new Date()),
-    "yyyy-MM-dd"
+    "yyyy-MM-dd",
   );
 
   return formattedDate;

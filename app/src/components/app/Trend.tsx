@@ -1,6 +1,5 @@
 import { LineChart } from "@tremor/react";
 
-
 export default function Trend({
   data,
   title,

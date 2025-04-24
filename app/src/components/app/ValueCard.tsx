@@ -1,3 +1,4 @@
+import { ReactNode } from "@tanstack/react-router";
 import { twMerge } from "tailwind-merge";
 
 export default function ValueCard({
@@ -7,6 +8,7 @@ export default function ValueCard({
   className,
   description,
   secondDescription,
+  children,
 }: {
   value: string;
   title: string;
@@ -14,6 +16,7 @@ export default function ValueCard({
   className?: string;
   description?: string;
   secondDescription?: string;
+  children?: ReactNode;
 }) {
   return (
     <div className="p-8 rounded-md flex flex-col gap-1 md:min-w-[230px] w-full border shadow-md">
@@ -23,6 +26,7 @@ export default function ValueCard({
       </span>
       <span className="mt-3 ">{description}</span>
       <span className="mt-1 ">{secondDescription}</span>
+      {children ? <>{children}</> : null}
     </div>
   );
 }

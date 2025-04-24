@@ -23,8 +23,6 @@ export default function useData() {
     );
   }, [data]);
 
-  console.log(sortedData);
-
   const averages = useMemo(() => {
     const result: DataPoint[] = [];
     sortedData

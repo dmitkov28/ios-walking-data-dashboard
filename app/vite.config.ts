@@ -14,6 +14,7 @@ export default defineConfig({
         short_name: "Walking",
         description: "A dashboard for my walking stats",
         theme_color: "#ffffff",
+        start_url: "/",
         icons: [
           {
             src: "pwa-192x192.png",
@@ -24,6 +25,14 @@ export default defineConfig({
             src: "pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
+          },
+        ],
+        screenshots: [
+          {
+            src: "/screenshot.png",
+            sizes: "3012x1336",
+            type: "image/png",
+            form_factor: "wide",
           },
         ],
       },

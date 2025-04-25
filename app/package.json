@@ -13,7 +13,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.29.2",
     "@tremor/react": "^3.18.7",
     "convex": "^1.10.0",
     "date-fns": "^3.6.0",

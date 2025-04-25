@@ -1,11 +1,14 @@
 import { format } from "date-fns";
 import { lazy, Suspense } from "react";
 import { AppBarChartLoading } from "./components/app/Bar";
+import { HorizontalBarChartLoading } from "./components/app/HorizontalBar";
 import { TrendLoading } from "./components/app/Trend";
 import { ValueCardLoading } from "./components/app/ValueCard";
-import { computeCaloriesBurned, distanceToMoon, earthCircumference } from "./lib/helpers";
-import useData from "./lib/useData";
-import { HorizontalBarChartLoading } from "./components/app/HorizontalBar";
+import { distanceToMoon, earthCircumference } from "./lib/helpers";
+import useData, {
+  computeCaloriesBurned,
+  computeProjectedTotalYearlyDistance,
+} from "./lib/useData";
 const AppBarChart = lazy(() => import("./components/app/Bar"));
 const Trend = lazy(() => import("./components/app/Trend"));
 const HorizontalBarChart = lazy(() => import("./components/app/HorizontalBar"));
@@ -13,7 +16,8 @@ const ValueCard = lazy(() => import("./components/app/ValueCard"));
 
 function App() {
   const {
-    monthlyAverage,
+    allTimeMonthlyAverage,
+    currentMonthAverage,
     averages,
     topMonthly,
     topMonthlyAvg,
@@ -57,8 +61,15 @@ function App() {
             <Suspense fallback={<ValueCardLoading />}>
               <ValueCard
                 title="Daily Average Distance"
-                value={`${monthlyAverage.toFixed(2)} km`}
-              />
+                value={`${currentMonthAverage.distance.toFixed(2)} km`}
+              >
+                <div>
+                  🏆 All-time Average:{" "}
+                  <span className="font-bold">
+                    {allTimeMonthlyAverage.toFixed(2)} km
+                  </span>
+                </div>
+              </ValueCard>
             </Suspense>
             <Suspense fallback={<ValueCardLoading />}>
               <ValueCard
@@ -68,7 +79,16 @@ function App() {
                 title="Month over Month Change"
                 icon={monthOverMonth >= 0 ? "⬆️" : "⬇️"}
                 value={`${monthOverMonth.toFixed(2)}%`}
-              />
+              >
+                <div>
+                  📈 Projected Yearly Distance:{" "}
+                  <span className="font-bold">
+                    {computeProjectedTotalYearlyDistance(
+                      currentMonthAverage.distance
+                    ).toFixed(2)} km
+                  </span>
+                </div>
+              </ValueCard>
             </Suspense>
             <Suspense fallback={<ValueCardLoading />}>
               <ValueCard
@@ -79,7 +99,8 @@ function App() {
                 value={`${today.distance.toFixed(2)} km`}
               >
                 <span className="text-gray-400 italic font-medium">
-                🔥 ~ {computeCaloriesBurned(today.distance).toFixed(0)} calories
+                  🔥 ~ {computeCaloriesBurned(today.distance).toFixed(0)}{" "}
+                  calories
                 </span>
               </ValueCard>
             </Suspense>
@@ -148,28 +169,28 @@ function App() {
             <h2 className="col-span-4 text-center my-6 text-2xl font-bold">
               🏆 Records
             </h2>
-            <Suspense fallback={<HorizontalBarChartLoading/>}>
+            <Suspense fallback={<HorizontalBarChartLoading />}>
               <HorizontalBarChart
                 className="md:col-span-1 col-span-4"
                 title="🏆 Top Days (km/day)"
                 data={topWalks}
               />
             </Suspense>
-            <Suspense fallback={<HorizontalBarChartLoading/>}>
+            <Suspense fallback={<HorizontalBarChartLoading />}>
               <HorizontalBarChart
                 className="md:col-span-1 col-span-4"
                 title="🏆 Top Months (avg. km/month)"
                 data={topMonthlyAvg}
               />
             </Suspense>
-            <Suspense fallback={<HorizontalBarChartLoading/>}>
+            <Suspense fallback={<HorizontalBarChartLoading />}>
               <HorizontalBarChart
                 className="md:col-span-1 col-span-4"
                 title="🏆 Top Months (km/month)"
                 data={topMonthly}
               />
             </Suspense>
-            <Suspense fallback={<HorizontalBarChartLoading/>}>
+            <Suspense fallback={<HorizontalBarChartLoading />}>
               <HorizontalBarChart
                 className="md:col-span-1 col-span-4"
                 title="🏆 Top Years (km/year)"

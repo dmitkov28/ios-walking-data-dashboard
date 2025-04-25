@@ -294,3 +294,8 @@ export const computeProjectedTotalYearlyDistance = (
   const daysInCurrentYear = getDaysInCurrentYear();
   return daysInCurrentYear * currentAverageDistance;
 };
+
+export const computeTotalKgCO2Saved = (distanceWalked: number) => {
+  const smallCarCO2 = 0.15 // kg per km
+  return smallCarCO2 * distanceWalked
+}

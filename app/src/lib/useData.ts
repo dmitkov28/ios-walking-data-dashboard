@@ -6,14 +6,23 @@ import {
   isSameMonth,
   isSameYear,
 } from "date-fns";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { api } from "../../convex/_generated/api";
 import { getDaysInCurrentYear } from "./helpers";
+import { db } from "./db";
 
 export default function useData() {
-  const data = useQuery(api.functions.getData);
+  let data;
+  
+  if (!navigator.onLine) {
+    const cache = useCachedData();
+    data = cache;
+  } else {
+    data = useQuery(api.functions.getData);
+    useSyncData(data);
+  }
   const loading = data === undefined;
-
+  
   const sortedData = useMemo(() => {
     if (!data) {
       return [];
@@ -236,6 +245,30 @@ export const computeProjectedTotalYearlyDistance = (
   currentAverageDistance: number
 ) => {
   const daysInCurrentYear = getDaysInCurrentYear();
-  console.log(daysInCurrentYear, currentAverageDistance)
   return daysInCurrentYear * currentAverageDistance;
+};
+
+const useSyncData = (data: DataPoint[] | undefined) => {
+  useEffect(() => {
+    (async () => {
+      if (data) {
+        await db.data.clear();
+        await db.data.bulkAdd(data);
+        console.log("Data successfully synced.");
+      }
+    })();
+  }, [data]);
+};
+
+const useCachedData = () => {
+  const [data, setData] = useState<DataPoint[] | undefined>();
+  useEffect(() => {
+    (async () => {
+      const cachedData = await db.data.toArray();
+      if (cachedData) {
+        setData(cachedData);
+      }
+    })();
+  }, []);
+  return data;
 };

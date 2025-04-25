@@ -19,7 +19,7 @@ export default function useData() {
     }
     return data.sort(
       (a, b) =>
-        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
   }, [data]);
 
@@ -65,7 +65,7 @@ export default function useData() {
 
     return avgs.sort(
       (a, b) =>
-        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
   }, [sortedData]);
 
@@ -73,7 +73,7 @@ export default function useData() {
     return [...sortedData].reduce((acc, curr) => acc + curr.distance, 0);
   }, [sortedData]);
 
-  const monthlyAverage = useMemo(() => {
+  const allTimeMonthlyAverage = useMemo(() => {
     return total / sortedData.length;
   }, [sortedData, total]);
 
@@ -147,17 +147,22 @@ export default function useData() {
     });
   }, [sortedData]);
 
+  const currentMonthAverage = useMemo(() => {
+    return averages[averages.length - 1];
+  }, [averages]);
+
   const monthOverMonth = useMemo(() => {
-    const currentMonth = averages[averages.length - 1];
     const prevMonth = averages[averages.length - 2];
-    if (!currentMonth || !prevMonth || isNaN(prevMonth.distance)) {
+    if (!currentMonthAverage || !prevMonth || isNaN(prevMonth.distance)) {
       return 0;
     }
 
     return (
-      ((currentMonth.distance - prevMonth.distance) / prevMonth.distance) * 100
+      ((currentMonthAverage.distance - prevMonth.distance) /
+        prevMonth.distance) *
+      100
     );
-  }, [averages]);
+  }, [averages, currentMonthAverage]);
 
   const today = useMemo(() => {
     if (!sortedData) {
@@ -179,7 +184,8 @@ export default function useData() {
   }, [sortedData]);
 
   return {
-    monthlyAverage,
+    allTimeMonthlyAverage,
+    currentMonthAverage,
     topMonthly,
     topMonthlyAvg,
     topWalks,
@@ -215,4 +221,13 @@ const calculateStreak = (data: DataPoint[], threshold: number) => {
   }
   const longestStreak = streaks.sort((a, b) => a.length - b.length).pop();
   return longestStreak as DataPoint[];
+};
+
+
+export const computeCaloriesBurned = (distance: number) => {
+  // Calories burned = Weight (kg) × Distance (km) × Calorie burn rate per kg/km
+  const weight = 85.5;
+  const burnRate = 0.9;
+
+  return weight * burnRate * distance;
 };

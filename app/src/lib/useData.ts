@@ -8,6 +8,7 @@ import {
 } from "date-fns";
 import { useMemo } from "react";
 import { api } from "../../convex/_generated/api";
+import { getDaysInCurrentYear } from "./helpers";
 
 export default function useData() {
   const data = useQuery(api.functions.getData);
@@ -223,11 +224,18 @@ const calculateStreak = (data: DataPoint[], threshold: number) => {
   return longestStreak as DataPoint[];
 };
 
-
 export const computeCaloriesBurned = (distance: number) => {
   // Calories burned = Weight (kg) × Distance (km) × Calorie burn rate per kg/km
   const weight = 85.5;
   const burnRate = 0.9;
 
   return weight * burnRate * distance;
+};
+
+export const computeProjectedTotalYearlyDistance = (
+  currentAverageDistance: number
+) => {
+  const daysInCurrentYear = getDaysInCurrentYear();
+  console.log(daysInCurrentYear, currentAverageDistance)
+  return daysInCurrentYear * currentAverageDistance;
 };

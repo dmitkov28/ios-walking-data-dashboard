@@ -30,21 +30,3 @@ export default function HorizontalBarChart({
     </Card>
   );
 }
-
-export function HorizontalBarChartLoading({
-  className,
-}: {
-  className?: string;
-}) {
-  return (
-    <Card className={twMerge("mx-auto max-w-lg animate-pulse", className)}>
-      <div className="h-6 w-2/3 bg-gray-200 rounded mb-3" />
-      <div className="h-4 w-full bg-gray-100 rounded mb-5" />
-      <div className="space-y-3">
-        {[...Array(5)].map((_, i) => (
-          <div key={i} className="h-4 w-full bg-gray-200 rounded" />
-        ))}
-      </div>
-    </Card>
-  );
-}

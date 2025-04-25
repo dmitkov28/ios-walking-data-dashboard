@@ -1,15 +1,17 @@
 import { format } from "date-fns";
 import { lazy, Suspense } from "react";
-import { AppBarChartLoading } from "./components/app/Bar";
-import { HorizontalBarChartLoading } from "./components/app/HorizontalBar";
-import { TrendLoading } from "./components/app/Trend";
-import { ValueCardLoading } from "./components/app/ValueCard";
+import { AppBarChartLoading } from "./components/app/AppBarChartLoading";
+import { HorizontalBarChartLoading } from "./components/app/HorizontalBarLoading";
+import { TrendLoading } from "./components/app/TrendLoading";
+import { ValueCardLoading } from "./components/app/ValueCardLoading";
 import { distanceToMoon, earthCircumference } from "./lib/helpers";
 import useData, {
   computeCaloriesBurned,
   computeProjectedTotalYearlyDistance,
 } from "./lib/useData";
+
 import OfflineBadge from "./components/app/OfflineBadge";
+
 const AppBarChart = lazy(() => import("./components/app/Bar"));
 const Trend = lazy(() => import("./components/app/Trend"));
 const HorizontalBarChart = lazy(() => import("./components/app/HorizontalBar"));
@@ -37,8 +39,7 @@ function App() {
   return (
     <main className="flex flex-col gap-8 w-full md:px-12 px-2">
       <h1 className="text-4xl font-extrabold my-8 text-center flex md:flex-row flex-col gap-4 items-center justify-center">
-        🚶 My walks{" "} {!navigator.onLine && <OfflineBadge/>}
-        
+        🚶 My walks {!navigator.onLine && <OfflineBadge />}
       </h1>
       {loading ? (
         <div className="flex h-full w-full items-center justify-center">

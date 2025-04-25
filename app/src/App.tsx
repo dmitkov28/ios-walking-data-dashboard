@@ -8,6 +8,7 @@ import { distanceToMoon, earthCircumference } from "./lib/helpers";
 import useData, {
   computeCaloriesBurned,
   computeProjectedTotalYearlyDistance,
+  computeTotalKgCO2Saved,
 } from "./lib/useData";
 
 import OfflineBadge from "./components/app/OfflineBadge";
@@ -59,7 +60,13 @@ function App() {
                   (total / distanceToMoon) *
                   100
                 ).toFixed(0)}% of the way to the Moon`}
-              />
+              >
+                <span>
+                  ⛽ {(computeTotalKgCO2Saved(total) / 1000).toFixed(2)} tons of
+                  CO
+                  <sub>2</sub> saved
+                </span>
+              </ValueCard>
             </Suspense>
             <Suspense fallback={<ValueCardLoading />}>
               <ValueCard

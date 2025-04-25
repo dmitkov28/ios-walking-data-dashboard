@@ -8,10 +8,13 @@
     "allowJs": true,
     "strict": true,
     "skipLibCheck": true,
-
     /* These compiler options are required by Convex */
     "target": "ESNext",
-    "lib": ["ES2021", "dom", "ESNext.Array"],
+    "lib": [
+      "ES2021",
+      "dom",
+      "ESNext.Array"
+    ],
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "module": "ESNext",
@@ -19,6 +22,13 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./**/*"],
-  "exclude": ["./_generated"]
+  "include": [
+    "./src/**/*",
+    "./convex/**/*"
+  ],
+  "exclude": [
+    "./_generated",
+    "vite.config.ts",
+    "node_modules"
+  ]
 }

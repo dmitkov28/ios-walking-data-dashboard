@@ -12,17 +12,53 @@ import { getDaysInCurrentYear } from "./helpers";
 import { db } from "./db";
 
 export default function useData() {
-  let data;
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [cachedData, setCachedData] = useState<DataPoint[] | undefined>(
+    undefined
+  );
+
+
+  const convexData = useQuery(api.functions.getData);
+
+  useEffect(() => {
+    const loadCachedData = async () => {
+      const data = await db.data.toArray();
+      if (data && data.length > 0) {
+        setCachedData(data);
+      }
+    };
+
+    loadCachedData();
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   
-  if (!navigator.onLine) {
-    const cache = useCachedData();
-    data = cache;
-  } else {
-    data = useQuery(api.functions.getData);
-    useSyncData(data);
-  }
+  useEffect(() => {
+    if (convexData && isOnline) {
+      const syncData = async () => {
+        await db.data.clear();
+        await db.data.bulkAdd(convexData);
+        console.log("Data successfully synced.");
+      };
+
+      syncData();
+    }
+  }, [convexData, isOnline]);
+
+  
+  const data = isOnline && convexData ? convexData : cachedData;
   const loading = data === undefined;
-  
+
   const sortedData = useMemo(() => {
     if (!data) {
       return [];
@@ -80,10 +116,11 @@ export default function useData() {
   }, [sortedData]);
 
   const total = useMemo(() => {
-    return [...sortedData].reduce((acc, curr) => acc + curr.distance, 0);
+    return sortedData.reduce((acc, curr) => acc + curr.distance, 0);
   }, [sortedData]);
 
   const allTimeMonthlyAverage = useMemo(() => {
+    if (sortedData.length === 0) return 0;
     return total / sortedData.length;
   }, [sortedData, total]);
 
@@ -158,12 +195,19 @@ export default function useData() {
   }, [sortedData]);
 
   const currentMonthAverage = useMemo(() => {
+    if (averages.length === 0) return { timestamp: "", distance: 0 };
     return averages[averages.length - 1];
   }, [averages]);
 
   const monthOverMonth = useMemo(() => {
-    const prevMonth = averages[averages.length - 2];
-    if (!currentMonthAverage || !prevMonth || isNaN(prevMonth.distance)) {
+    const prevMonth =
+      averages.length >= 2 ? averages[averages.length - 2] : null;
+    if (
+      !currentMonthAverage ||
+      !prevMonth ||
+      isNaN(prevMonth.distance) ||
+      prevMonth.distance === 0
+    ) {
       return 0;
     }
 
@@ -175,7 +219,7 @@ export default function useData() {
   }, [averages, currentMonthAverage]);
 
   const today = useMemo(() => {
-    if (!sortedData) {
+    if (!sortedData || sortedData.length === 0) {
       return { timestamp: "", distance: 0 };
     }
     return sortedData[sortedData.length - 1];
@@ -229,8 +273,11 @@ const calculateStreak = (data: DataPoint[], threshold: number) => {
   if (currentStreak.length) {
     streaks.push(currentStreak);
   }
-  const longestStreak = streaks.sort((a, b) => a.length - b.length).pop();
-  return longestStreak as DataPoint[];
+
+  if (streaks.length === 0) return [];
+
+  const longestStreak = streaks.sort((a, b) => b.length - a.length)[0];
+  return longestStreak;
 };
 
 export const computeCaloriesBurned = (distance: number) => {
@@ -246,29 +293,4 @@ export const computeProjectedTotalYearlyDistance = (
 ) => {
   const daysInCurrentYear = getDaysInCurrentYear();
   return daysInCurrentYear * currentAverageDistance;
-};
-
-const useSyncData = (data: DataPoint[] | undefined) => {
-  useEffect(() => {
-    (async () => {
-      if (data) {
-        await db.data.clear();
-        await db.data.bulkAdd(data);
-        console.log("Data successfully synced.");
-      }
-    })();
-  }, [data]);
-};
-
-const useCachedData = () => {
-  const [data, setData] = useState<DataPoint[] | undefined>();
-  useEffect(() => {
-    (async () => {
-      const cachedData = await db.data.toArray();
-      if (cachedData) {
-        setData(cachedData);
-      }
-    })();
-  }, []);
-  return data;
 };

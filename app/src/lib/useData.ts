@@ -1,5 +1,6 @@
 import { useQuery } from "convex/react";
 import {
+  compareAsc,
   differenceInDays,
   format,
   getDaysInMonth,
@@ -16,7 +17,6 @@ export default function useData() {
   const [cachedData, setCachedData] = useState<DataPoint[] | undefined>(
     undefined
   );
-
 
   const convexData = useQuery(api.functions.getData);
 
@@ -42,7 +42,6 @@ export default function useData() {
     };
   }, []);
 
-  
   useEffect(() => {
     if (convexData && isOnline) {
       const syncData = async () => {
@@ -55,7 +54,6 @@ export default function useData() {
     }
   }, [convexData, isOnline]);
 
-  
   const data = isOnline && convexData ? convexData : cachedData;
   const loading = data === undefined;
 
@@ -237,6 +235,40 @@ export default function useData() {
     return calculateStreak(sortedData, 10);
   }, [sortedData]);
 
+  const topMonthCurrentYear = useMemo(() => {
+    return averages
+      .filter((avg) => {
+        if (new Date(avg.timestamp).getFullYear() == new Date().getFullYear()) {
+          return avg;
+        }
+      })
+      .sort((a, b) => a.distance - b.distance)
+      .slice(-1)[0];
+  }, [averages]);
+
+  const currentYear = useMemo(() => {
+    return sortedData
+      .filter(
+        (datapoint) =>
+          new Date(datapoint.timestamp).getFullYear() ==
+          new Date().getFullYear()
+      )
+      .sort((a, b) => compareAsc(a.timestamp, b.timestamp));
+  }, [sortedData]);
+
+  const topDayCurrentYear = useMemo(() => {
+    return [...currentYear]
+      .sort((a, b) => a.distance - b.distance)
+      .slice(-1)[0];
+  }, [sortedData]);
+
+  const currentYearStreaks = useMemo(() => {
+    const streak_30 = calculateStreak(currentYear, 30);
+    const streak_20 = calculateStreak(currentYear, 20);
+    const streak_10 = calculateStreak(currentYear, 10);
+    return { streak_30, streak_20, streak_10 };
+  }, [sortedData]);
+
   return {
     allTimeMonthlyAverage,
     currentMonthAverage,
@@ -253,6 +285,9 @@ export default function useData() {
     streak_30,
     streak_20,
     streak_10,
+    topMonthCurrentYear,
+    topDayCurrentYear,
+    currentYearStreaks,
   };
 }
 
@@ -296,6 +331,6 @@ export const computeProjectedTotalYearlyDistance = (
 };
 
 export const computeTotalKgCO2Saved = (distanceWalked: number) => {
-  const smallCarCO2 = 0.15 // kg per km
-  return smallCarCO2 * distanceWalked
-}
+  const smallCarCO2 = 0.15; // kg per km
+  return smallCarCO2 * distanceWalked;
+};

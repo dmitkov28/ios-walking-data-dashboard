@@ -11,6 +11,7 @@ import useData, {
   computeTotalKgCO2Saved,
 } from "./lib/useData";
 
+import CurrentYearRecords from "./components/app/CurrentYearRecords";
 import OfflineBadge from "./components/app/OfflineBadge";
 
 const AppBarChart = lazy(() => import("./components/app/Bar"));
@@ -35,6 +36,9 @@ function App() {
     streak_30,
     streak_20,
     streak_10,
+    topMonthCurrentYear,
+    topDayCurrentYear,
+    currentYearStreaks
   } = useData();
 
   return (
@@ -180,6 +184,14 @@ function App() {
             <h2 className="col-span-4 text-center my-6 text-2xl font-bold">
               🏆 Records
             </h2>
+            <Suspense fallback={<p></p>}>
+              <CurrentYearRecords
+                topMonth={topMonthCurrentYear}
+                topDay={topDayCurrentYear}
+                streaks={currentYearStreaks}
+                className="col-span-4"
+              />
+            </Suspense>
             <Suspense fallback={<HorizontalBarChartLoading />}>
               <HorizontalBarChart
                 className="md:col-span-1 col-span-4"

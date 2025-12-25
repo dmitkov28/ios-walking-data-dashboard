@@ -28,7 +28,7 @@ export default function useData() {
       }
     };
 
-    loadCachedData();
+    void loadCachedData();
 
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
@@ -50,7 +50,7 @@ export default function useData() {
         console.log("Data successfully synced.");
       };
 
-      syncData();
+      void syncData();
     }
   }, [convexData, isOnline]);
 

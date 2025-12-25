@@ -11,6 +11,7 @@ module.exports = {
     "convex/_generated",
     ".eslintrc.cjs",
     "tailwind.config.js",
+    "vite.config.js",
     // There are currently ESLint errors in shadcn/ui
     "src/components/ui",
   ],

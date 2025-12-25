@@ -21,3 +21,5 @@ node_modules
 data.json
 *.xml
 tsconfig.node.tsbuildinfo
+
+app/convex/_generated

@@ -1,5 +1,5 @@
 
-export function HorizontalBarChartLoading({}: {}) {
+export function HorizontalBarChartLoading() {
   return (
     <div className={"mx-auto max-w-lg animate-pulse rounded-md border border-gray-300 p-2"}>
       <div className="h-6 w-2/3 bg-gray-200 rounded mb-3" />

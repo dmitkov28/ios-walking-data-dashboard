@@ -48,32 +48,50 @@ export default function CurrentYearRecords({
 
         <div className="pt-4 border-t border-gray-200">
           <h2 className="font-bold text-lg text-center mb-4 ">🚀 Streaks</h2>
-          <ul className="w-full grid md:grid-cols-3 grid-cols-1 gap-3">
-            <li className="p-3 rounded-md  flex flex-col items-center bg-blue-50">
-              <span className="font-bold">🚀 Top 10+km Streak</span>
-              <span className="text-sm ">
-                {streaks.streak_10.length} days (
-                {format(streaks.streak_10[0].timestamp, "d MMMM")} -{" "}
-                {format(streaks.streak_10.slice(-1)[0].timestamp, "d MMMM")})
-              </span>
-            </li>
-            <li className="p-3 rounded-md bg-blue-50 flex flex-col items-center">
-              <span className="font-bold ">🚀 Top 20+km Streak</span>
-              <span className="text-sm ">
-                {streaks.streak_20.length} days (
-                {format(streaks.streak_20[0].timestamp, "d MMMM")} -{" "}
-                {format(streaks.streak_20.slice(-1)[0].timestamp, "d MMMM")})
-              </span>
-            </li>
-            <li className="p-3 rounded-md bg-blue-50 flex flex-col items-center">
-              <span className="font-bold ">🚀 Top 30+km Streak</span>
-              <span className="text-sm ">
-                {streaks.streak_30.length} days (
-                {format(streaks.streak_30[0].timestamp, "d MMMM")} -{" "}
-                {format(streaks.streak_30.slice(-1)[0].timestamp, "d MMMM")})
-              </span>
-            </li>
-          </ul>
+          {streaks.streak_10.length === 0 &&
+          streaks.streak_20.length === 0 &&
+          streaks.streak_30.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              <span className="text-4xl mb-2 block">🎯</span>
+              <p>No streaks yet this year</p>
+            </div>
+          ) : (
+            <ul className="w-full grid md:grid-cols-3 grid-cols-1 gap-3">
+              {streaks.streak_10.length > 0 && (
+                <li className="p-3 rounded-md  flex flex-col items-center bg-blue-50">
+                  <span className="font-bold">🚀 Top 10+km Streak</span>
+                  <span className="text-sm ">
+                    {streaks.streak_10.length} days (
+                    {format(streaks.streak_10[0].timestamp, "d MMMM")} -{" "}
+                    {format(streaks.streak_10.slice(-1)[0].timestamp, "d MMMM")}
+                    )
+                  </span>
+                </li>
+              )}
+              {streaks.streak_20.length > 0 && (
+                <li className="p-3 rounded-md bg-blue-50 flex flex-col items-center">
+                  <span className="font-bold ">🚀 Top 20+km Streak</span>
+                  <span className="text-sm ">
+                    {streaks.streak_20.length} days (
+                    {format(streaks.streak_20[0].timestamp, "d MMMM")} -{" "}
+                    {format(streaks.streak_20.slice(-1)[0].timestamp, "d MMMM")}
+                    )
+                  </span>
+                </li>
+              )}
+              {streaks.streak_30.length > 0 && (
+                <li className="p-3 rounded-md bg-blue-50 flex flex-col items-center">
+                  <span className="font-bold ">🚀 Top 30+km Streak</span>
+                  <span className="text-sm ">
+                    {streaks.streak_30.length} days (
+                    {format(streaks.streak_30[0].timestamp, "d MMMM")} -{" "}
+                    {format(streaks.streak_30.slice(-1)[0].timestamp, "d MMMM")}
+                    )
+                  </span>
+                </li>
+              )}
+            </ul>
+          )}
         </div>
       </div>
     </div>
